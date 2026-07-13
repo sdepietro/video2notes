@@ -16,6 +16,9 @@ class Config:
     openai_api_key: str
     stt_model: str
     llm_model: str
+    # Idioma del audio (ISO-639-1, ej. "es"). Forzarlo evita que Whisper detecte
+    # mal el idioma y alucine. Vacío = detección automática.
+    language: str | None
 
 
 def load_config() -> Config:
@@ -28,4 +31,5 @@ def load_config() -> Config:
         openai_api_key=key,
         stt_model=os.getenv("STT_MODEL", "whisper-1").strip(),
         llm_model=os.getenv("LLM_MODEL", "gpt-4o").strip(),
+        language=(os.getenv("LANGUAGE", "es").strip() or None),
     )

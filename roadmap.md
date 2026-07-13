@@ -91,10 +91,12 @@ video_notas/
 
 ### Fase 2 — Robustez (reuniones reales)
 - [x] Estimación de costo + confirmación interactiva antes de procesar
-- [x] Validación de límites de STT (25 MB de archivo y 1400s de `gpt-4o-transcribe`)
-- [ ] **Chunking** de audio: partir archivos largos y unir transcripciones
+- [x] **Chunking** de audio: partir archivos largos y unir transcripciones
+      (imprescindible: evita el loop de repetición de `whisper-1` en audios largos)
+- [x] Forzar idioma (`LANGUAGE`) para evitar detección errónea y alucinaciones
+- [x] Progreso por trozos durante la transcripción (`rich`)
 - [ ] Manejo de errores y reintentos (API caída, rate limits, timeouts)
-- [ ] Barra de progreso (`rich`) — transcribir tarda
+- [ ] Limpieza de artefactos de Whisper (ej. "Subtítulos de Amara.org", repeticiones)
 - [ ] Soportar varios formatos de entrada (mp4, mkv, mov, mp3, wav...)
 - [ ] Cache: no re-transcribir si ya existe el transcript
 - [ ] (Opcional) **Diarización**: identificar quién habla (Deepgram/AssemblyAI lo dan)

@@ -57,8 +57,11 @@ def procesar(video: Path, out_dir: Path, keep_transcript: bool) -> Path:
     with console.status("[1/4] Extrayendo audio con ffmpeg..."):
         audio_path = audio.extract_audio(video, out_dir / f"{stem}.mp3")
 
-    with console.status("[2/4] Transcribiendo audio (OpenAI)..."):
-        transcript = transcribe.transcribe(audio_path, config)
+    with console.status("[2/4] Transcribiendo audio (OpenAI)...") as status:
+        def _prog(i: int, total: int) -> None:
+            if total > 1:
+                status.update(f"[2/4] Transcribiendo audio (trozo {i}/{total})...")
+        transcript = transcribe.transcribe(audio_path, config, on_progress=_prog)
     if keep_transcript:
         (out_dir / f"{stem}.transcript.txt").write_text(transcript, encoding="utf-8")
 

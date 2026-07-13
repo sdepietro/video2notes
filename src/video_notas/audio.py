@@ -7,6 +7,31 @@ import subprocess
 from pathlib import Path
 
 
+def split_audio(audio_path: Path, chunk_seconds: int, out_dir: Path) -> list[Path]:
+    """Parte un audio en trozos de `chunk_seconds` y devuelve las rutas ordenadas.
+
+    Cortar en trozos evita el "loop de repetición" de whisper-1 en archivos largos
+    y mantiene cada parte por debajo de los límites de la API.
+    """
+    if shutil.which("ffmpeg") is None:
+        raise RuntimeError("ffmpeg no está instalado o no está en el PATH.")
+    out_dir.mkdir(parents=True, exist_ok=True)
+    pattern = str(out_dir / f"{audio_path.stem}_chunk_%04d.mp3")
+    cmd = [
+        "ffmpeg",
+        "-y",
+        "-i", str(audio_path),
+        "-f", "segment",
+        "-segment_time", str(chunk_seconds),
+        "-c", "copy",
+        pattern,
+    ]
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    if result.returncode != 0:
+        raise RuntimeError(f"ffmpeg (segment) falló:\n{result.stderr[-2000:]}")
+    return sorted(out_dir.glob(f"{audio_path.stem}_chunk_*.mp3"))
+
+
 def get_duration_seconds(video_path: Path) -> float:
     """Devuelve la duración del video en segundos usando ffprobe (no cuesta nada)."""
     if shutil.which("ffprobe") is None:

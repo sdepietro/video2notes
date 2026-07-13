@@ -1,8 +1,16 @@
-"""Paso 2: transcribir el audio con la API de OpenAI (STT)."""
+"""Paso 2: transcribir el audio con la API de OpenAI (STT).
+
+Para reuniones largas parte el audio en trozos y transcribe cada uno por
+separado. Esto es imprescindible: `whisper-1` sobre un archivo largo se engancha
+en un "loop de repetición" y alucina; cortarlo en trozos lo evita y además
+mantiene cada parte por debajo de los límites de la API (25 MB / duración).
+"""
 
 from __future__ import annotations
 
+import tempfile
 from pathlib import Path
+from typing import Callable
 
 from openai import OpenAI
 
@@ -12,43 +20,47 @@ from .config import Config
 # Límite práctico de tamaño de archivo de la API de OpenAI (~25 MB).
 MAX_BYTES = 25 * 1024 * 1024
 
-# Algunos modelos limitan la DURACIÓN del audio (no solo el peso).
-# gpt-4o-transcribe / gpt-4o-mini-transcribe cortan en 1400s (~23 min).
-MAX_SECONDS_BY_MODEL = {
-    "gpt-4o-transcribe": 1400,
-    "gpt-4o-mini-transcribe": 1400,
-}
+# Duración de cada trozo. 5 min es corto para evitar loops y suficiente para
+# mantener contexto de puntuación. Un archivo más largo que esto se parte.
+CHUNK_SECONDS = 300
+
+ProgressFn = Callable[[int, int], None]
 
 
-def transcribe(audio_path: Path, config: Config) -> str:
-    """Transcribe un archivo de audio y devuelve el texto plano.
+def _transcribe_file(
+    client: OpenAI, path: Path, model: str, language: str | None
+) -> str:
+    params = {"model": model}
+    if language:
+        params["language"] = language
+    with path.open("rb") as f:
+        return client.audio.transcriptions.create(file=f, **params).text
 
-    Fase 1: asume que el archivo entra dentro del límite de la API.
-    TODO (Fase 2): partir en trozos (chunking) los audios largos y unir
-    las transcripciones.
-    """
-    size = audio_path.stat().st_size
-    if size > MAX_BYTES:
-        mb = size / 1024 / 1024
-        raise RuntimeError(
-            f"El audio pesa {mb:.1f} MB y supera el límite de ~25 MB de la API.\n"
-            "Para reuniones largas hace falta chunking (pendiente, Fase 2)."
-        )
 
-    max_seconds = MAX_SECONDS_BY_MODEL.get(config.stt_model)
-    if max_seconds is not None:
-        duration = audio.get_duration_seconds(audio_path)
-        if duration > max_seconds:
-            raise RuntimeError(
-                f"El audio dura {duration/60:.1f} min y el modelo "
-                f"'{config.stt_model}' acepta como máximo {max_seconds/60:.0f} min.\n"
-                "Usá STT_MODEL=whisper-1 (sin ese límite) o esperá el chunking (Fase 2)."
-            )
-
+def transcribe(
+    audio_path: Path,
+    config: Config,
+    on_progress: ProgressFn | None = None,
+) -> str:
+    """Transcribe un audio (partiéndolo en trozos si es largo) y devuelve el texto."""
     client = OpenAI(api_key=config.openai_api_key)
-    with audio_path.open("rb") as f:
-        result = client.audio.transcriptions.create(
-            model=config.stt_model,
-            file=f,
-        )
-    return result.text
+    duration = audio.get_duration_seconds(audio_path)
+
+    # Audio corto: una sola llamada.
+    if duration <= CHUNK_SECONDS and audio_path.stat().st_size <= MAX_BYTES:
+        if on_progress:
+            on_progress(1, 1)
+        return _transcribe_file(client, audio_path, config.stt_model, config.language)
+
+    # Audio largo: partir en trozos y transcribir cada uno.
+    with tempfile.TemporaryDirectory(prefix="video_notas_") as tmp:
+        chunks = audio.split_audio(audio_path, CHUNK_SECONDS, Path(tmp))
+        total = len(chunks)
+        partes: list[str] = []
+        for i, chunk in enumerate(chunks, start=1):
+            partes.append(
+                _transcribe_file(client, chunk, config.stt_model, config.language)
+            )
+            if on_progress:
+                on_progress(i, total)
+        return "\n".join(partes).strip()

@@ -162,18 +162,19 @@ Siempre vas a ver el estimado antes de confirmar.
   `source .venv/bin/activate`.
 - **`ffmpeg no está instalado`** → revisá el paso 2 de requisitos.
 - **`Falta OPENAI_API_KEY`** → todavía no completaste tu clave en el archivo `.env`.
-- **Error de "duración máxima" o "25 MB"** → tu reunión es muy larga para el
-  modelo elegido. Usá `whisper-1` (el valor por defecto), que soporta reuniones
-  largas. El soporte para reuniones de varias horas está en camino (ver más abajo).
+- **La transcripción salió en otro idioma o con frases repetidas** → asegurate de
+  tener `LANGUAGE=es` (o el idioma que corresponda) en tu `.env`. Reuniones largas
+  se cortan en trozos automáticamente para evitar que la IA se "cuelgue".
 
 ---
 
 ## ⚠️ Limitaciones actuales
 
-- Reuniones de **más de ~2 horas** pueden superar el límite de tamaño de la API.
-  El corte automático en partes (*chunking*) está planificado (ver `roadmap.md`).
+- Las reuniones largas se procesan cortándolas en trozos automáticamente, así que
+  no hay un tope práctico de duración; solo tardan proporcionalmente más.
 - La minuta **no identifica quién dijo cada cosa** (por ahora).
-- La calidad de la transcripción depende de la calidad del audio.
+- La calidad de la transcripción depende de la calidad del audio; en tramos de
+  silencio la IA puede colar alguna frase suelta (ej. "Subtítulos de Amara.org").
 
 ---
 
