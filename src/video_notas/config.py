@@ -26,6 +26,6 @@ def load_config() -> Config:
         )
     return Config(
         openai_api_key=key,
-        stt_model=os.getenv("STT_MODEL", "gpt-4o-transcribe").strip(),
+        stt_model=os.getenv("STT_MODEL", "whisper-1").strip(),
         llm_model=os.getenv("LLM_MODEL", "gpt-4o").strip(),
     )

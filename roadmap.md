@@ -90,6 +90,8 @@ video_notas/
 - [ ] Probar con un video real de ~5 min (requiere la API key)
 
 ### Fase 2 — Robustez (reuniones reales)
+- [x] Estimación de costo + confirmación interactiva antes de procesar
+- [x] Validación de límites de STT (25 MB de archivo y 1400s de `gpt-4o-transcribe`)
 - [ ] **Chunking** de audio: partir archivos largos y unir transcripciones
 - [ ] Manejo de errores y reintentos (API caída, rate limits, timeouts)
 - [ ] Barra de progreso (`rich`) — transcribir tarda
