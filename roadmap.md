@@ -74,20 +74,20 @@ video_notas/
 
 ## Roadmap por fases
 
-### Fase 0 — Setup del proyecto
-- [ ] Crear estructura de carpetas y `requirements.txt`
-- [ ] `.gitignore`, `.env.example` y carga de config (`python-dotenv`)
-- [ ] `git init` + primer commit
-- [ ] Verificar que `ffmpeg` esté instalado en el sistema
-- [ ] Conseguir las API keys (STT + Anthropic) y ponerlas en `.env`
+### Fase 0 — Setup del proyecto ✅
+- [x] Crear estructura de carpetas y `requirements.txt`
+- [x] `.gitignore`, `.env.example` y carga de config (`python-dotenv`)
+- [x] `git init` + primer commit
+- [x] Verificar que `ffmpeg` esté instalado en el sistema
+- [ ] Conseguir la API key de OpenAI y ponerla en `.env`  ← **te toca a vos**
 
-### Fase 1 — MVP end-to-end (CLI, camino feliz)
-- [ ] `audio.py`: extraer audio de un video corto con ffmpeg
-- [ ] `transcribe.py`: transcribir un audio que **entre en el límite** de la API
-- [ ] `minutes.py`: prompt + llamada a Claude → devuelve JSON con minuta y TODO
-- [ ] `render.py`: volcar el resultado a un `.md` legible
-- [ ] `cli.py`: `video-notas procesar video.mp4 -o output/`
-- [ ] Probar con un video real de ~5 min
+### Fase 1 — MVP end-to-end (CLI, camino feliz) ✅ (falta probar con la key)
+- [x] `audio.py`: extraer audio de un video corto con ffmpeg
+- [x] `transcribe.py`: transcribir un audio que **entre en el límite** de la API
+- [x] `minutes.py`: prompt + llamada a OpenAI → devuelve JSON con minuta y TODO
+- [x] `render.py`: volcar el resultado a un `.md` legible
+- [x] `cli.py`: `video-notas video.mp4 -o output/`
+- [ ] Probar con un video real de ~5 min (requiere la API key)
 
 ### Fase 2 — Robustez (reuniones reales)
 - [ ] **Chunking** de audio: partir archivos largos y unir transcripciones
