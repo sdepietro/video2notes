@@ -49,7 +49,9 @@ def mostrar_estimacion(duration: float, est: cost.CostEstimate, config: Config) 
     console.print("[dim]Precios aproximados; el costo real puede variar.[/dim]")
 
 
-def procesar(video: Path, out_dir: Path, keep_transcript: bool) -> Path:
+def procesar(
+    video: Path, out_dir: Path, keep_transcript: bool, summary_paragraphs: int
+) -> Path:
     config = load_config()
     out_dir.mkdir(parents=True, exist_ok=True)
     stem = video.stem
@@ -66,7 +68,7 @@ def procesar(video: Path, out_dir: Path, keep_transcript: bool) -> Path:
         (out_dir / f"{stem}.transcript.txt").write_text(transcript, encoding="utf-8")
 
     with console.status("[3/4] Generando minuta y TODO (OpenAI)..."):
-        minuta = minutes.generate_minutes(transcript, config)
+        minuta = minutes.generate_minutes(transcript, config, summary_paragraphs)
 
     console.print("[4/4] Renderizando Markdown...")
     md = render.to_markdown(minuta)
@@ -114,7 +116,10 @@ def main(argv: list[str] | None = None) -> int:
             console.print("Cancelado.")
             return 0
 
-        out_path = procesar(args.video, args.out, args.keep_transcript)
+        summary_paragraphs = minutes.target_summary_paragraphs(duration)
+        out_path = procesar(
+            args.video, args.out, args.keep_transcript, summary_paragraphs
+        )
     except Exception as exc:  # noqa: BLE001 - mensaje amable en la CLI
         console.print(f"[red]Error:[/red] {exc}")
         return 1

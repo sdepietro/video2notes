@@ -7,7 +7,7 @@ Devolvé EXCLUSIVAMENTE un JSON válido (sin texto alrededor) con esta forma:
 
 {
   "titulo": "Título corto y descriptivo de la reunión",
-  "resumen": "Resumen ejecutivo de 3-6 frases",
+  "resumen": "Resumen ejecutivo en varios párrafos (ver instrucción de longitud abajo), separados por línea en blanco",
   "temas": [
     { "tema": "Nombre del tema", "puntos": ["punto discutido", "..."] }
   ],
@@ -25,3 +25,6 @@ Reglas:
 - Respondé en español.
 - Si algún campo no tiene información, usá una lista vacía o null según corresponda.
 - No incluyas comentarios ni markdown, solo el JSON.
+- El "resumen" no debe ser escueto: desarrollá el contexto, los temas y los
+  matices de la discusión. La longitud objetivo se indica en el mensaje del
+  usuario (aproximadamente un párrafo por cada tramo de la reunión).
