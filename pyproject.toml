@@ -1,5 +1,5 @@
 [project]
-name = "video-notas"
+name = "video2notes"
 version = "0.1.0"
 description = "Genera minutas y TODO de reuniones a partir de un video usando IA."
 requires-python = ">=3.10"
@@ -10,7 +10,7 @@ dependencies = [
 ]
 
 [project.scripts]
-video-notas = "video_notas.cli:main"
+video2notes = "video_notas.cli:main"
 
 [build-system]
 requires = ["setuptools>=68"]

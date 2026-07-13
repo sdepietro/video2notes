@@ -107,7 +107,7 @@ OPENAI_API_KEY=sk-tu-clave-aca
 Con el entorno activado (`source .venv/bin/activate`), corré:
 
 ```bash
-video-notas mi_reunion.mp4
+video2notes mi_reunion.mp4
 ```
 
 Te va a mostrar algo así y te va a pedir confirmación:
@@ -131,11 +131,11 @@ Al terminar, encontrás la minuta en la carpeta `output/`.
 
 | Comando | Qué hace |
 |---------|----------|
-| `video-notas reunion.mp4` | Procesa y pregunta antes de gastar |
-| `video-notas reunion.mp4 --estimate-only` | Solo muestra el costo, no procesa |
-| `video-notas reunion.mp4 -y` | Procesa sin preguntar (para automatizar) |
-| `video-notas reunion.mp4 -o minutas/` | Guarda la salida en otra carpeta |
-| `video-notas reunion.mp4 --keep-transcript` | Guarda también la transcripción en texto |
+| `video2notes reunion.mp4` | Procesa y pregunta antes de gastar |
+| `video2notes reunion.mp4 --estimate-only` | Solo muestra el costo, no procesa |
+| `video2notes reunion.mp4 -y` | Procesa sin preguntar (para automatizar) |
+| `video2notes reunion.mp4 -o minutas/` | Guarda la salida en otra carpeta |
+| `video2notes reunion.mp4 --keep-transcript` | Guarda también la transcripción en texto |
 
 Acepta formatos de video y audio comunes: `.mp4`, `.mkv`, `.mov`, `.mp3`, `.wav`, etc.
 
@@ -158,7 +158,7 @@ Siempre vas a ver el estimado antes de confirmar.
 
 ## 🧩 Problemas comunes
 
-- **`command not found: video-notas`** → activá el entorno primero:
+- **`command not found: video2notes`** → activá el entorno primero:
   `source .venv/bin/activate`.
 - **`ffmpeg no está instalado`** → revisá el paso 2 de requisitos.
 - **`Falta OPENAI_API_KEY`** → todavía no completaste tu clave en el archivo `.env`.

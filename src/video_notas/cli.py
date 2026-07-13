@@ -79,7 +79,7 @@ def procesar(
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        prog="video-notas",
+        prog="video2notes",
         description="Genera una minuta y un TODO de una reunión a partir de un video.",
     )
     parser.add_argument("video", type=Path, help="Ruta al archivo de video")

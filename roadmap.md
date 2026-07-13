@@ -86,7 +86,7 @@ video_notas/
 - [x] `transcribe.py`: transcribir un audio que **entre en el límite** de la API
 - [x] `minutes.py`: prompt + llamada a OpenAI → devuelve JSON con minuta y TODO
 - [x] `render.py`: volcar el resultado a un `.md` legible
-- [x] `cli.py`: `video-notas video.mp4 -o output/`
+- [x] `cli.py`: `video2notes video.mp4 -o output/`
 - [ ] Probar con un video real de ~5 min (requiere la API key)
 
 ### Fase 2 — Robustez (reuniones reales)
