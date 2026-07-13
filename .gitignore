@@ -1,0 +1,21 @@
+# Claves y secretos
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# Salidas generadas
+output/
+*.mp3
+*.m4a
+*.wav
+
+# SO / editores
+.DS_Store
+.idea/
+.vscode/
